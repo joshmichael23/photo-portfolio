@@ -332,15 +332,32 @@
 }
 
 .folder-select {
+  appearance: none;
   margin-right: auto;
   padding: 0.5rem 0.75rem;
   border: 1px solid white;
   border-radius: 0;
   color: white;
-  background: transparent;
+  background: #191714;
   cursor: pointer;
   font: inherit;
   height:2.5rem;
+}
+
+.folder-select:hover,
+.folder-select:focus {
+  background: #191714;
+  color: #f5f2ed;
+}
+
+.folder-select:focus {
+  outline: 2px solid #191714;
+  outline-offset: 2px;
+}
+
+.folder-select option {
+  color: #191714;
+  background: #f5f2ed;
 }
 .contact-submit {
   align-self: flex-start;
