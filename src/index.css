@@ -8,8 +8,8 @@
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.5;
     font-weight: 400;
-    color: #191714;
-    background: #f5f2ed;
+    color: white;
+    background: #191714;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -23,8 +23,14 @@
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
   padding: 1rem;
-  background-color: #f5f2ed;
+  background-color: #191714;
 }
+
+  .header .hamburger{
+    color:#f5f2ed;
+    margin:auto;
+  }
+
 
   .header > .nav-links {
     display: flex;
@@ -32,7 +38,10 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    background:#191714;
+    color:white;
   }
+
 
   .header > .nav-links > li > a{
     text-decoration: none !important;
@@ -44,9 +53,9 @@
      display: block;
   }
 
-  .header > .nav-links > li > a:hover{
-
-    color:black;
+  .header > .nav-links > li > a{
+    background-color:#191714;
+    color:white;
   }
 
   .header > h1{
@@ -142,12 +151,13 @@
   display: block;
   margin: 1rem auto 0;
   padding: 0.75rem 1.5rem;
-  border: 1px solid #191714;
+  border: 1px solid white;
   border-radius: 0;
-  color: #191714;
+  color: white;
   background: transparent;
   cursor: pointer;
   font: inherit;
+
 }
 
 .see-more-button:hover {
@@ -307,24 +317,26 @@
   border: 0;
   border-bottom: 1px solid #aaa39a;
   border-radius: 0;
-  color: #191714;
+  color: #f5f2ed;
   background: transparent;
   font: inherit;
   resize: vertical;
 }
 
+
 .form-field input:focus,
 .form-field textarea:focus {
   outline: none;
-  border-bottom-color: #191714;
+  border-bottom-color: #f5f2ed;
+  color:#f5f2ed;
 }
 
 .folder-select {
   margin-right: auto;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #191714;
+  border: 1px solid white;
   border-radius: 0;
-  color: #191714;
+  color: white;
   background: transparent;
   cursor: pointer;
   font: inherit;
@@ -333,7 +345,7 @@
 .contact-submit {
   align-self: flex-start;
   padding: 0.75rem 1.25rem;
-  border: 1px solid #191714;
+  border: 1px solid #f5f2ed;
   border-radius: 0;
   color: #f5f2ed;
   background: #191714;
@@ -390,8 +402,8 @@
     padding: 0.5rem 0.75rem;
     border: none;
     border-radius: 0;
-    color: #191714;
-    background: transparent;
+    color: white;
+    background: #191714;
     cursor: pointer;
     font: inherit;
     width:max-content;
@@ -405,7 +417,9 @@
     display: none;
     min-width: 9rem;
     padding: 0.5rem 0;
-    background: #f9f9f9;
+    background: #191714;
+    color:white;
+    border:1px solid white;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
 
