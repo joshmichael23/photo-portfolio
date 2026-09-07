@@ -175,7 +175,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: white;
+  background: #191714;
   overflow: hidden;
 }
 
@@ -183,7 +183,7 @@
   position: absolute;
   top: 1.5rem;
   left: 50%;
-  color: black;
+  color: white;
   font-size: 0.9rem;
   text-align:center;
   transform: translateX(-50%);
@@ -194,7 +194,7 @@
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  color:black;
+  color:white;
 }
 
 .image-modal-content {
@@ -225,7 +225,7 @@
   position: absolute;
   top: 50%;
   right: 1.5rem;
-  color:black;
+  color:white;
   transform: translateY(-50%);
 
 }
@@ -234,7 +234,7 @@
   position: absolute;
   top: 50%;
   left: 1.5rem;
-  color:black;
+  color:white;
   transform: translateY(-50%);
 
 }
