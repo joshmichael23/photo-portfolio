@@ -18,9 +18,9 @@ const Header = () => {
 </svg></span>
       </button>
       <ul id="main-navigation" className={`nav-links ${menuOpen ? 'is-open' : ''}`}>
-        <li><a href="/" onClick={() => setMenuOpen(false)}>Home</a></li>
-        <li><a href="/about" onClick={() => setMenuOpen(false)}>About</a></li>
-        <li><a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a></li>
+        <li><a href="#" onClick={() => setMenuOpen(false)}>Home</a></li>
+        <li><a href="#about" onClick={() => setMenuOpen(false)}>About</a></li>
+        <li><a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a></li>
       </ul>
       <h1>josh olea</h1>
     </header>

@@ -66,6 +66,55 @@
   gap:10px;
   padding: 1rem;
   position:relative;
+  min-height: 12rem;
+}
+
+.image-gallery > .image-grid,
+.image-gallery > .see-more-button {
+  transition: opacity 250ms ease;
+}
+
+.image-gallery.is-loading > .image-grid,
+.image-gallery.is-loading > .see-more-button {
+  opacity: 0.25;
+}
+
+.image-gallery.is-loaded > .image-grid,
+.image-gallery.is-loaded > .see-more-button {
+  animation: fade-in 350ms ease both;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid rgba(25, 23, 20, 0.2);
+  border-top-color: #191714;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .image-grid {
@@ -82,6 +131,11 @@
   margin-bottom: 1rem;
   break-inside: avoid;
   cursor:pointer;
+}
+
+.image-grid img.is-selected {
+  outline: 3px solid #191714;
+  outline-offset: -3px;
 }
 
 .see-more-button {
@@ -105,12 +159,32 @@
   position: fixed;
   inset: 0;
   z-index: 10;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.65);
+  background: white;
   overflow: hidden;
+}
+
+.image-position {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  color: black;
+  font-size: 0.9rem;
+  text-align:center;
+  transform: translateX(-50%);
+
+}
+
+.close-button{
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  color:black;
 }
 
 .image-modal-content {
@@ -118,7 +192,7 @@
   max-width: calc(100vw - 4rem);
   max-height: calc(100vh - 4rem);
   padding: 1rem;
-  background: #fff;
+
   border-radius: 8px;
   overflow: hidden;
 }
@@ -130,6 +204,146 @@
   max-height: calc(100vh - 6rem);
   object-fit: contain;
   cursor:pointer;
+
+    -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge */
+  user-select: none;         /* Standard */
+}
+
+.next-button{
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  color:black;
+  transform: translateY(-50%);
+
+}
+
+.prev-button{
+  position: absolute;
+  top: 50%;
+  left: 1.5rem;
+  color:black;
+  transform: translateY(-50%);
+
+}
+
+
+
+
+.about-section{
+  background-color:gainsboro;
+  color:black;
+  padding: 2rem;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  align-items:center;
+}
+
+.about-section > img{
+  width: 250px;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.about-section > .location{
+  font-weight:bold;
+  color:#191714;
+}
+
+.contact-section {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1.2fr);
+  gap: 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+}
+
+.contact-intro h2 {
+  margin: 0.5rem 0 1rem;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 500;
+}
+
+.contact-intro > p:last-child {
+  max-width: 24rem;
+  color: #5f5b56;
+}
+
+.eyebrow {
+  color: #77716a;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 0.8rem 0;
+  border: 0;
+  border-bottom: 1px solid #aaa39a;
+  border-radius: 0;
+  color: #191714;
+  background: transparent;
+  font: inherit;
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-bottom-color: #191714;
+}
+
+.contact-submit {
+  align-self: flex-start;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #191714;
+  border-radius: 0;
+  color: #f5f2ed;
+  background: #191714;
+  cursor: pointer;
+  font: inherit;
+}
+
+.contact-submit:hover {
+  color: #191714;
+  background: transparent;
+}
+
+.form-success {
+  color: #4b6b4b;
+}
+
+
+
+.btn:hover{
+  cursor:pointer;
+
 }
 
 @media (min-width: 600px) {
@@ -181,5 +395,13 @@
 
   .header > .nav-links > li > a {
     padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .contact-section {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 3rem 1.5rem;
   }
 }
