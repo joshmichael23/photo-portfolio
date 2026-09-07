@@ -1,13 +1,29 @@
-import React from 'react'
 import { useState } from 'react'
 
 function Contact() {
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState('')
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    setSubmitted(true)
-    event.currentTarget.reset()
+    setStatus('sending')
+
+    const form = event.currentTarget
+    const fields = Object.fromEntries(new FormData(form).entries())
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fields),
+      })
+
+      if (!response.ok) throw new Error('Unable to send message')
+
+      form.reset()
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -39,13 +55,19 @@ function Contact() {
           <textarea id="message" name="message" rows="7" required />
         </div>
 
-        <button className="contact-submit" type="submit">Send message</button>
+        <button className="contact-submit" type="submit" disabled={status === 'sending'}>
+          {status === 'sending' ? 'Sending...' : 'Send message'}
+        </button>
 
-        {submitted && (
-          <p className="form-success" role="status">Thanks, your message is ready to be sent.</p>
+        {status === 'success' && (
+          <p className="form-success" role="status">Thanks, your message was sent.</p>
+        )}
+
+        {status === 'error' && (
+          <p className="form-error" role="alert">Unable to send your message. Please try again.</p>
         )}
       </form>
-    </main>
+    </div>
   )
 }
 

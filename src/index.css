@@ -339,6 +339,15 @@
   color: #4b6b4b;
 }
 
+.form-error {
+  color: #9b3d32;
+}
+
+.contact-submit:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 
 
 .btn:hover{
