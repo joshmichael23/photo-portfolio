@@ -3,9 +3,20 @@ import { useEffect, useState } from 'react'
 import About from './About'
 import Contact from './Contact'
 
+function shuffleImages(images) {
+    const shuffledImages = [...images]
+
+    for (let index = shuffledImages.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1))
+        ;[shuffledImages[index], shuffledImages[randomIndex]] = [shuffledImages[randomIndex], shuffledImages[index]]
+    }
+
+    return shuffledImages
+}
+
 function Home() {
     const [images, setImages] = useState(null)
-    const [folder] = useState('night')
+    const [folder, setFolder] = useState('*')
     const [visibleCount, setVisibleCount] = useState(6)
     const [modal, setModal] = useState(false)
     const [selectedImage, setSelectedImage] = useState(null)
@@ -13,6 +24,9 @@ function Home() {
 
     useEffect(() => {
         setIsLoading(true)
+        setVisibleCount(6)
+        setSelectedImage(null)
+        setModal(false)
 
         fetch(`/api/images?folder=${folder}`)
             .then((response) => {
@@ -20,7 +34,7 @@ function Home() {
                 return response.json()
             })
             .then((loadedImages) => {
-                setImages(loadedImages)
+                setImages(shuffleImages(loadedImages))
                 setIsLoading(false)
             })
             .catch(() => {
@@ -64,6 +78,12 @@ function Home() {
             )}
 
            
+            <select className="folder-select" onChange={(e) => setFolder(e.target.value)} value={folder}>
+                <option value="*">All</option>
+                <option value="night">Night</option>
+                <option value="street">Street</option>
+            </select>
+            
             {images && (
                 <div className="image-grid">
                     {images.slice(0, visibleCount).map((image) => (

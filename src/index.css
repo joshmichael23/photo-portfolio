@@ -319,6 +319,17 @@
   border-bottom-color: #191714;
 }
 
+.folder-select {
+  margin-right: auto;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #191714;
+  border-radius: 0;
+  color: #191714;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  height:2.5rem;
+}
 .contact-submit {
   align-self: flex-start;
   padding: 0.75rem 1.25rem;
