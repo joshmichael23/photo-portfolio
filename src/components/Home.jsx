@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import About from './About'
 import Contact from './Contact'
 
@@ -21,6 +21,8 @@ function Home() {
     const [modal, setModal] = useState(false)
     const [selectedImage, setSelectedImage] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [folders, setFolders] = useState([])
+    const selectRef = useRef(null)
 
     useEffect(() => {
         setIsLoading(true)
@@ -41,7 +43,24 @@ function Home() {
                 setImages([])
                 setIsLoading(false)
             })
+        
+   
     }, [folder])
+
+    useEffect(() => {
+        fetch('/api/images?mode=folders')
+            .then((response) => {
+                if (!response.ok) throw new Error('Unable to load folders')
+                return response.json()
+            })
+            .then((loadedFolders) => {
+                console.log('folders', loadedFolders)
+                setFolders(loadedFolders)
+            })
+            .catch(() => {
+                setFolders([])
+            })
+    }, []);
 
     useEffect(() => {
         document.body.style.overflow = modal ? 'hidden' : ''
@@ -67,6 +86,19 @@ function Home() {
         setSelectedImage(images[nextIndex])
     }
 
+    const openFolderSelect = () => {
+        const select = selectRef.current
+        if (!select) return
+
+        if (typeof select.showPicker === 'function') {
+            select.showPicker()
+            return
+        }
+
+        select.focus()
+        select.click()
+    }
+
     return (
         <>
         <div className={`image-gallery ${isLoading ? 'is-loading' : 'is-loaded'}`} aria-busy={isLoading}>
@@ -78,11 +110,18 @@ function Home() {
             )}
 
            
-            <select className="folder-select" onChange={(e) => setFolder(e.target.value)} value={folder}>
-                <option value="*">All</option>
-                <option value="night">Night</option>
-                <option value="street">Street</option>
-            </select>
+            <div className="folder-select-wrapper">
+
+                <ul className="folder-select">
+                    {folders.map((folderName) => (
+                        <li key={folderName}>
+                            <a href="#" className={folder === (folderName === 'All' ? '*' : folderName) ? 'is-selected' : ''} onClick={(e) => { e.preventDefault(); setFolder(folderName === 'All' ? '*' : folderName); }}>
+                                {folderName}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
             
             {images && (
                 <div className="image-grid">

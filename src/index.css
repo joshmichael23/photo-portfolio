@@ -17,10 +17,9 @@
     
   }
 
-
 .header{
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr auto;
   align-items: center;
   padding: 1rem;
   background-color: #191714;
@@ -58,7 +57,11 @@
     color:white;
   }
 
-  .header > h1{
+  .header > div {
+    cursor: pointer;
+  }
+
+  .header > div > h1{
     text-align: center;
 
     margin: 0;
@@ -80,7 +83,7 @@
 
 .image-gallery > .image-grid,
 .image-gallery > .see-more-button {
-  transition: opacity 250ms ease;
+  transition: opacity 250ms ease, color .2s ease, background-color .2s ease;
 }
 
 .image-gallery.is-loading > .image-grid,
@@ -157,12 +160,14 @@
   background: transparent;
   cursor: pointer;
   font: inherit;
+  font-weight:bold;
+  transition: all 0.2s ease;
 
 }
 
 .see-more-button:hover {
-  color: #f5f2ed;
-  background: #191714;
+  color: #171714;
+  background: #f5f2ed;;
 }
 
 .image-modal{
@@ -331,34 +336,74 @@
   color:#f5f2ed;
 }
 
-.folder-select {
-  appearance: none;
-  margin-right: auto;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid white;
-  border-radius: 0;
-  color: white;
-  background: #191714;
-  cursor: pointer;
-  font: inherit;
-  height:2.5rem;
+.folder-select-wrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:75%;
+  position:relative;
+  margin-bottom: 1rem;
 }
 
-.folder-select:hover,
-.folder-select:focus {
-  background: #191714;
-  color: #f5f2ed;
+.folder-select{
+  display:flex;
+  flex-direction:row;
+  gap:2rem;
+  list-style: none;
+  color:white;
+  
+  border-bottom: 2px solid #585756;
+  width: 100%;
+  z-index:1;
 }
 
-.folder-select:focus {
-  outline: 2px solid #191714;
-  outline-offset: 2px;
+.folder-select > li {
+  flex: 1;
+  text-align: center;
 }
 
-.folder-select option {
-  color: #191714;
-  background: #f5f2ed;
+.folder-select > * > a {
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration:none;
+  color:white;
+  position: relative;
 }
+
+.folder-select > * > a:hover{
+  color:#f5f2ed;
+}
+
+.folder-select > * > a::after{
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: white;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.folder-select > * > a:hover::after,
+.folder-select > * > a.is-selected::after{
+  transform: translateX(-50%) scaleX(1);
+}
+
+.folder-select > * > a.is-selected{
+  color:white;
+  font-weight:bold;
+}
+
+  .folder-select > li{
+    flex: 1;
+    
+  }
+
 .contact-submit {
   align-self: flex-start;
   padding: 0.75rem 1.25rem;
@@ -369,6 +414,8 @@
   cursor: pointer;
   font: inherit;
 }
+
+
 
 .contact-submit:hover {
   color: #191714;
@@ -411,7 +458,7 @@
 @media (max-width: 1023px) {
   .header {
     position: relative;
-    grid-template-columns: 1fr auto;
+    
   }
 
   .menu-toggle {

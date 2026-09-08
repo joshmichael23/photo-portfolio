@@ -95,6 +95,22 @@ const server = createServer(async (request, response) => {
   }
 
   try {
+    const mode = requestUrl.searchParams.get('mode')
+
+    if (mode === 'folders') {
+      const result = await cloudinary.api.sub_folders('portfolio')
+      const folders = [
+        'All',
+        ...(result.folders || [])
+          .map((item) => item.path.replace(/^portfolio\//i, ''))
+          .filter(Boolean),
+      ]
+
+      response.writeHead(200, { 'Content-Type': 'application/json' })
+      response.end(JSON.stringify(folders))
+      return
+    }
+
     const subfolder = requestUrl.searchParams.get('folder') || '*'
     const result = await cloudinary.search
       .expression(getFolderExpression(subfolder))

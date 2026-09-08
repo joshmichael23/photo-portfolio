@@ -19,9 +19,25 @@ export default async function handler(request, response) {
   }
 
   try {
-    const subfolder = new URL(request.url, 'http://localhost').searchParams.get('folder') || '*'
+    const { searchParams } = new URL(request.url, 'http://localhost')
+    const folder = searchParams.get('folder') || '*'
+    const mode = searchParams.get('mode')
+
+    if (mode === 'folders') {
+      const result = await cloudinary.api.sub_folders('portfolio')
+      const folders = [
+        'All',
+        ...(result.folders || [])
+          .map((item) => item.path.replace(/^portfolio\//i, ''))
+          .filter(Boolean),
+      ]
+
+      response.status(200).json(folders)
+      return
+    }
+
     const result = await cloudinary.search
-      .expression(getFolderExpression(subfolder))
+      .expression(getFolderExpression(folder))
       .sort_by('created_at', 'desc')
       .max_results(100)
       .execute()
