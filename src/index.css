@@ -1,11 +1,25 @@
+@font-face {
+  font-family: "League Spartan";
+  src: url("./assets/fonts/LeagueSpartan-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "League Spartan";
+  src: url("./assets/fonts/LeagueSpartan-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
 *{
     box-sizing: border-box;
     margin:0;
     padding:0;
+    
 }
 
 :root {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'League Spartan', Helvetica, sans-serif;
     line-height: 1.5;
     font-weight: 400;
     color: white;
@@ -56,6 +70,12 @@
     background-color:#191714;
     color:white;
   }
+
+    .header > .nav-links > li > a:hover{
+      color:hsl(40, 2%, 68%);
+
+    }
+
 
   .header > div {
     cursor: pointer;
@@ -277,8 +297,12 @@
 }
 
 .about-section > .location{
-  font-weight:bold;
+
   color:#191714;
+}
+
+.about-section > .location > .location-label{
+  font-weight:bold;
 }
 
 .contact-section {
@@ -559,3 +583,4 @@
     padding: 3rem 1.5rem;
   }
 }
+
