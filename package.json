@@ -15,6 +15,7 @@
     "nodemailer": "^10.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-inner-image-zoom": "^4.0.1",
     "react-router-dom": "^7.18.3"
   },
   "devDependencies": {

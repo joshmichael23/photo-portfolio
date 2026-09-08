@@ -47,6 +47,7 @@ export default async function handler(request, response) {
       width: image.width,
       height: image.height,
       public_id: image.public_id,
+      created_at: image.created_at,
     })))
   } catch (error) {
     console.error('Cloudinary request failed:', error)

@@ -2,6 +2,8 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import About from './About'
 import Contact from './Contact'
+import { InnerImageZoom } from 'react-inner-image-zoom';
+import 'react-inner-image-zoom/lib/styles.min.css';
 
 function shuffleImages(images) {
     const shuffledImages = [...images]
@@ -23,6 +25,7 @@ function Home() {
     const [isLoading, setIsLoading] = useState(true)
     const [folders, setFolders] = useState([])
     const selectRef = useRef(null)
+    const [sortBy, setSortBy] = useState('random')
 
     useEffect(() => {
         setIsLoading(true)
@@ -36,7 +39,9 @@ function Home() {
                 return response.json()
             })
             .then((loadedImages) => {
-                setImages(shuffleImages(loadedImages))
+
+                setImages(sortBy === 'random' ? shuffleImages(loadedImages) : loadedImages)
+                console.log('images', loadedImages)
                 setIsLoading(false)
             })
             .catch(() => {
@@ -45,7 +50,7 @@ function Home() {
             })
         
    
-    }, [folder])
+    }, [folder, sortBy])
 
     useEffect(() => {
         fetch('/api/images?mode=folders')
@@ -83,6 +88,7 @@ function Home() {
         if (!visibleLength || selectedIndex < 0) return
 
         const nextIndex = (selectedIndex + offset + visibleLength) % visibleLength
+       
         setSelectedImage(images[nextIndex])
     }
 
@@ -121,6 +127,14 @@ function Home() {
                         </li>
                     ))}
                 </ul>
+
+                <div className="sort-select">
+                    <label>Sort by:</label>
+                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="recent">Recently Added</option>
+                        <option value="random">Random</option>
+                    </select>
+                </div>
             </div>
             
             {images && (
@@ -132,6 +146,8 @@ function Home() {
                             alt={image.public_id}
                             onClick={() => { setModal(true); setSelectedImage(image) }}
                         />
+
+                        
                     ))}
                 </div>
             )}
@@ -144,9 +160,10 @@ function Home() {
 
             {modal && selectedImage &&
                 <div className="image-modal">
-                    <p className="image-position">
-                        {selectedIndex + 1} / {visibleCount}
-                    </p>
+                    <div className="image-position">
+                        <p>{selectedIndex + 1} / {visibleCount}</p>
+
+                    </div>
                     <div onClick={closeModal} className="close-button btn">
                         <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -160,10 +177,15 @@ function Home() {
                         </svg>
                     </div>
                     <div className="image-modal-content">
-                        <img
+                         {/* <img src={selectedImage.url}></img> */}
+
+                         <InnerImageZoom
                             src={selectedImage.url}
-                            alt={selectedImage.public_id}
-                            onClick={closeModal}
+                            key={selectedImage.public_id}
+                            zoomType="click"
+                            zoomScale={1}
+                            fullscreenOnMobile
+                            
                         />
                     </div>
                     <div className="next-button btn" onClick={() => changeImage(1)}>
