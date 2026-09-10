@@ -16,32 +16,58 @@ function shuffleImages(images) {
     return shuffledImages
 }
 
+function getColumnCount() {
+    return window.matchMedia('(min-width: 600px)').matches ? 3 : 1
+}
+
+function groupImages(images, columnCount) {
+    const rows = []
+
+    for (let index = 0; index < images.length; index += columnCount) {
+        rows.push(images.slice(index, index + columnCount))
+    }
+
+    return rows
+}
+
+const PAGE_SIZE = 6
+
 function Home() {
     const [images, setImages] = useState(null)
     const [folder, setFolder] = useState('*')
-    const [visibleCount, setVisibleCount] = useState(6)
     const [modal, setModal] = useState(false)
     const [selectedImage, setSelectedImage] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [isLoadingMore, setIsLoadingMore] = useState(false)
+    const [nextCursor, setNextCursor] = useState(null)
     const [folders, setFolders] = useState([])
     const selectRef = useRef(null)
     const [sortBy, setSortBy] = useState('random')
+    const [columnCount, setColumnCount] = useState(getColumnCount)
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(min-width: 600px)')
+        const updateColumnCount = () => setColumnCount(getColumnCount())
+
+        mediaQuery.addEventListener('change', updateColumnCount)
+        return () => mediaQuery.removeEventListener('change', updateColumnCount)
+    }, [])
 
     useEffect(() => {
         setIsLoading(true)
-        setVisibleCount(6)
         setSelectedImage(null)
         setModal(false)
+        setNextCursor(null)
 
-        fetch(`/api/images?folder=${folder}`)
+        fetch(`/api/images?folder=${folder}&limit=${PAGE_SIZE}`)
             .then((response) => {
                 if (!response.ok) throw new Error('Unable to load images')
                 return response.json()
             })
-            .then((loadedImages) => {
+            .then(({ images: loadedImages, nextCursor: loadedNextCursor }) => {
 
                 setImages(sortBy === 'random' ? shuffleImages(loadedImages) : loadedImages)
-                console.log('images', loadedImages)
+                setNextCursor(loadedNextCursor)
                 setIsLoading(false)
             })
             .catch(() => {
@@ -51,6 +77,24 @@ function Home() {
         
    
     }, [folder, sortBy])
+
+    const loadMoreImages = () => {
+        if (!nextCursor || isLoadingMore) return
+
+        setIsLoadingMore(true)
+        fetch(`/api/images?folder=${folder}&limit=${PAGE_SIZE}&cursor=${encodeURIComponent(nextCursor)}`)
+            .then((response) => {
+                if (!response.ok) throw new Error('Unable to load more images')
+                return response.json()
+            })
+            .then(({ images: loadedImages, nextCursor: loadedNextCursor }) => {
+                const nextImages = sortBy === 'random' ? shuffleImages(loadedImages) : loadedImages
+                setImages((currentImages) => [...(currentImages || []), ...nextImages])
+                setNextCursor(loadedNextCursor)
+            })
+            .catch(() => setNextCursor(null))
+            .finally(() => setIsLoadingMore(false))
+    }
 
     useEffect(() => {
         fetch('/api/images?mode=folders')
@@ -84,7 +128,7 @@ function Home() {
     }
 
     const changeImage = (offset) => {
-        const visibleLength = Math.min(visibleCount, images?.length ?? 0)
+        const visibleLength = images?.length ?? 0
         if (!visibleLength || selectedIndex < 0) return
 
         const nextIndex = (selectedIndex + offset + visibleLength) % visibleLength
@@ -139,29 +183,36 @@ function Home() {
             
             {images && (
                 <div className="image-grid">
-                    {images.slice(0, visibleCount).map((image) => (
-                        <img
-                            key={image.public_id}
-                            src={image.url}
-                            alt={image.public_id}
-                            onClick={() => { setModal(true); setSelectedImage(image) }}
-                        />
+                    {groupImages(images, columnCount).map((row, rowIndex) => (
+                        <div className="image-row" key={`row-${rowIndex}`}>
+                            {row.map((image) => {
+                                const aspectRatio = image.width / image.height
 
-                        
+                                return (
+                                    <img
+                                        key={image.public_id}
+                                        src={image.url}
+                                        alt={image.public_id}
+                                        style={{ aspectRatio, flexGrow: aspectRatio }}
+                                        onClick={() => { setModal(true); setSelectedImage(image) }}
+                                    />
+                                )
+                            })}
+                        </div>
                     ))}
                 </div>
             )}
 
-            {images && visibleCount < images.length && (
-                <button className="see-more-button" type="button" onClick={() => setVisibleCount((count) => count + 6)}>
-                    See more
+            {images && nextCursor && (
+                <button className="see-more-button" type="button" onClick={loadMoreImages} disabled={isLoadingMore}>
+                    {isLoadingMore ? 'Loading...' : 'See more'}
                 </button>
             )}
 
             {modal && selectedImage &&
                 <div className="image-modal">
                     <div className="image-position">
-                        <p>{selectedIndex + 1} / {visibleCount}</p>
+                        <p>{selectedIndex + 1} / {images.length}</p>
 
                     </div>
                     <div onClick={closeModal} className="close-button btn">

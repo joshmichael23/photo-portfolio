@@ -150,18 +150,24 @@
 }
 
 .image-grid {
-  columns: 1;
-  column-gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   width: 100%;
-   z-index: 2;
+  z-index: 2;
+}
+
+.image-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
 }
 
 .image-grid img {
   display: block;
-  width: 100%;
+  min-width: 0;
+  width: 0;
   height: auto;
-  margin-bottom: 1rem;
-  break-inside: avoid;
   cursor:pointer;
 }
 
@@ -519,19 +525,6 @@
 
 .btn:hover{
   cursor:pointer;
-
-}
-
-@media (min-width: 600px) {
-  .image-grid {
-    columns: 2;
-  }
-}
-
-@media (min-width: 1024px) {
-  .image-grid {
-    columns: 3;
-  }
 
 }
 

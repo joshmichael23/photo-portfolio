@@ -112,20 +112,28 @@ const server = createServer(async (request, response) => {
     }
 
     const subfolder = requestUrl.searchParams.get('folder') || '*'
-    const result = await cloudinary.search
+    const limit = Math.min(Math.max(Number.parseInt(requestUrl.searchParams.get('limit') || '6', 10) || 6, 1), 100)
+    const cursor = requestUrl.searchParams.get('cursor')
+    let search = cloudinary.search
       .expression(getFolderExpression(subfolder))
       .sort_by('created_at', 'desc')
-      .max_results(100)
-      .execute()
+      .max_results(limit)
+
+    if (cursor) search = search.next_cursor(cursor)
+
+    const result = await search.execute()
 
     response.writeHead(200, { 'Content-Type': 'application/json' })
-    response.end(JSON.stringify(result.resources.map((image) => ({
-      url: image.secure_url,
-      width: image.width,
-      height: image.height,
-      public_id: image.public_id,
-      created_at: image.created_at,
-    }))))
+    response.end(JSON.stringify({
+      images: result.resources.map((image) => ({
+        url: image.secure_url,
+        width: image.width,
+        height: image.height,
+        public_id: image.public_id,
+        created_at: image.created_at,
+      })),
+      nextCursor: result.next_cursor || null,
+    }))
   } catch (error) {
     console.error('Cloudinary request failed:', error)
     response.writeHead(500, { 'Content-Type': 'application/json' })
